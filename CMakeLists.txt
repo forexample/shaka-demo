@@ -45,6 +45,11 @@ add_custom_command(
     COMMAND
     ${CMAKE_COMMAND}
     -E
+    make_directory
+    $<TARGET_FILE_DIR:demo>
+    COMMAND
+    ${CMAKE_COMMAND}
+    -E
     copy
     ${CMAKE_CURRENT_LIST_DIR}/shaka-player.compiled.js
     $<TARGET_FILE_DIR:demo>
