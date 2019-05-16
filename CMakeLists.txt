@@ -2,19 +2,32 @@ cmake_minimum_required(VERSION 3.2)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.23.157.tar.gz"
-    SHA1 "4d502f1d8fb44cb5e9893e810607cc1f2b4aa47f"
+    URL "https://github.com/ruslo/hunter/archive/v0.23.170.tar.gz"
+    SHA1 "b2807c7071c5810be76944e6926abd36b6359236"
     LOCAL
 )
 
 project(shaka-demo)
 
+hunter_add_package(shaka_player_embedded)
+find_package(shaka_player_embedded CONFIG REQUIRED)
+
+if(IOS)
+  set(
+      SHAKA_PLAYER_EMBEDDED_IOS_FRAMEWORK_LOCATION
+      "${SHAKA_PLAYER_EMBEDDED_ROOT}/ShakaPlayerEmbedded.framework"
+  )
+  if(NOT EXISTS "${SHAKA_PLAYER_EMBEDDED_IOS_FRAMEWORK_LOCATION}")
+    message(FATAL_ERROR "Framework not found")
+  endif()
+  add_subdirectory(ios-demo)
+  return()
+endif()
+
 add_executable(demo main.cc)
 
 target_compile_definitions(demo PRIVATE OS_POSIX)
 
-hunter_add_package(shaka_player_embedded)
-find_package(shaka_player_embedded CONFIG REQUIRED)
 target_link_libraries(demo PRIVATE shaka_player_embedded::shaka_player_embedded)
 
 hunter_add_package(gflags)
